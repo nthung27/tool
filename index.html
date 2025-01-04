@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>TOOL NÀY LÀ CỦA HƯNG</title>
+    <link rel="stylesheet" href="style.css">     
+</head>
+<body>
+
+    <div class="container">
+        <div class="menu">
+            <ul>
+                <li><a href="index.html">Đếm số</a></li>
+                <li><a href="main2.html">Điểm che khuất</a></li>
+                <li><a href="main3.html">Road Edge</a></li>
+            </ul>
+        </div>        
+
+        <label for="inputNumber">Nhập vào số (Số chẵn):</label>
+        <input type="number" id="inputNumber" min="4" step="2" required>
+
+        <div class="sequence-container">
+            <h4>Dãy số:</h4>
+            <input type="text" id="sequence" readonly>
+            <button id="copyButton" onclick="copySequence()"><i class="fa-solid fa-copy"></i></button>
+        </div>
+
+        <div class="sequence-container">
+            <h4>Đảo ngược:</h4>
+            <input type="text" id="reversedSequence" readonly>
+            <button id="copyButton" onclick="copySequence()"><i class="fa-solid fa-copy"></i></button>
+        </div>
+    </div>
+
+    <script>
+        let sequence = [];
+
+        // Sự kiện input để tự động tạo dãy số khi người dùng nhập vào ô input
+        document.getElementById("inputNumber").addEventListener("input", generateSequence);
+
+        function generateSequence() {
+            let num = parseInt(document.getElementById("inputNumber").value);
+            sequence = [];
+
+            // Kiểm tra tính hợp lệ của đầu vào (chỉ cho phép số chẵn)
+            if (isNaN(num) || num <= 0 || num % 2 !== 0) {
+                document.getElementById("sequence").value = "Vui lòng nhập một số chẵn.";
+                document.getElementById("reversedSequence").value = "";
+                return;
+            }
+
+            // Tính số phần tử nửa đầu (bao gồm số 3 ở giữa)
+            let half = Math.floor((num - 1) / 2); // Bớt 1 vì số 3 đã chiếm một phần
+
+            // Xây dựng dãy số
+            for (let i = 0; i < half; i++) {
+                sequence.push(1);
+            }
+
+            sequence.push(3); // Thêm số 3 vào giữa
+
+            for (let i = 0; i < half; i++) {
+                sequence.push(2);
+            }
+
+            sequence.push(3); // Thêm số 3 cuối cùng
+
+            document.getElementById("sequence").value = sequence.join(","); // Hiển thị trong input
+            
+            // Tự động đảo ngược dãy số sau khi tạo
+            reverseSequence();
+        }
+
+        function reverseSequence() {
+            let reversed = [];
+            let half = Math.floor((sequence.length - 1) / 2);
+
+            for (let i = 0; i < half; i++) {
+                reversed.push(2);
+            }
+
+            reversed.push(3); // Thêm số 3 vào giữa
+
+            for (let i = 0; i < half; i++) {
+                reversed.push(1);
+            }
+
+            reversed.push(3); // Thêm số 3 cuối cùng
+
+            document.getElementById("reversedSequence").value = reversed.join(","); // Hiển thị trong input
+        }
+
+        // Hàm sao chép dãy số
+        function copySequence() {
+            // Lấy dãy số từ phần tử input
+            let sequenceText = document.getElementById("sequence").value;
+
+            // Tạo một trường input tạm thời để sao chép
+            let tempInput = document.createElement("input");
+            tempInput.value = sequenceText;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+
+            alert("Dãy số đã được sao chép!");
+        }
+    </script>
+
+</body>
+</html>

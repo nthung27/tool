@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <title>TOOL NÀY LÀ CỦA HƯNG</title>
+  <link rel="stylesheet" href="style.css">     
+</head>
+<body>
+  <div class="container">
+    <div class="menu">
+      <ul>
+          <li><a href="index.html">Đếm số</a></li>
+          <li><a href="main2.html">Điểm che khuất</a></li>
+          <li><a href="main3.html">Road Edge</a></li>
+      </ul>
+  </div>     
+
+    <label for="inputNumber">Nhập số nguyên chia hết cho 4 và lớn hơn hoặc bằng 8:</label>
+    <input type="number" id="inputNumber" min="8" step="4" required>
+    
+    <div class="sequence-container">
+      <h4>Dãy số:</h4>
+      <input type="text" id="sequence" readonly>
+      <button id="copyButton" onclick="copySequence()"><i class="fa-solid fa-copy"></i></button>
+    </div>
+
+    <div class="sequence-container">
+      <h4>Đảo ngược:</h4>
+      <input type="text" id="reversedSequence" readonly>
+      <button id="copyButton" onclick="copySequence()"><i class="fa-solid fa-copy"></i></button>
+    </div>
+  </div>
+
+  <script>
+    let sequence = [];
+
+    // Sự kiện input để tự động tạo dãy số khi người dùng nhập vào ô input
+    document.getElementById("inputNumber").addEventListener("input", generateSequence);
+
+    function generateSequence() {
+      let num = parseInt(document.getElementById("inputNumber").value);
+      sequence = [];
+
+      // Kiểm tra giá trị đầu vào
+      if (isNaN(num) || num < 8 || num % 4 !== 0) {
+        document.getElementById("sequence").value = "Vui lòng nhập một số nguyên chia hết cho 4 và lớn hơn hoặc bằng 8.";
+        document.getElementById("reversedSequence").value = "";
+        return;
+      }
+
+      // Khởi tạo dãy số
+      const repeatSegment = [1, 4]; // Lặp "1, 4"
+      const segmentBefore = [1, 3]; // Đoạn "1, 3"
+      const segmentAfter = [2, 5];  // Đoạn "2, 5"
+      const endSegment = [2, 3];    // Đoạn kết thúc "2, 3"
+
+      // Số lần lặp của đoạn "1, 4" và "2, 5"
+      const repeatCount = (num - 8) / 4;
+
+      // Thêm đoạn "1, 4"
+      for (let i = 0; i < repeatCount + 1; i++) {
+        sequence.push(...repeatSegment);
+      }
+
+      // Thêm đoạn "1, 3"
+      sequence.push(...segmentBefore);
+
+      // Thêm đoạn "2, 5"
+      for (let i = 0; i < repeatCount + 1; i++) {
+        sequence.push(...segmentAfter);
+      }
+
+      // Thêm đoạn kết thúc "2, 3"
+      sequence.push(...endSegment);
+
+      // Hiển thị dãy số
+      document.getElementById("sequence").value = sequence.join(", ");
+
+      // Đảo ngược dãy số theo yêu cầu
+      reverseSequence();
+    }
+
+    function reverseSequence() {
+      let reversed = [];
+      const repeatSegment = [1, 4]; // Lặp "1, 4"
+      const segmentBefore = [1, 3]; // Đoạn "1, 3"
+      const segmentAfter = [2, 5];  // Đoạn "2, 5"
+      const endSegment = [2, 3];    // Đoạn kết thúc "2, 3"
+
+      // Số lần lặp của đoạn "1, 4" và "2, 5"
+      const repeatCount = (sequence.length - 8) / 4;
+
+      // Đoạn 2,5 sẽ đứng đầu
+      for (let i = 0; i < repeatCount + 1; i++) {
+        reversed.push(...segmentAfter);
+      }
+
+      // Đoạn 2,3 ở giữa
+      reversed.push(...endSegment);
+
+      // Đoạn 1,4 đứng cuối
+      for (let i = 0; i < repeatCount + 1; i++) {
+        reversed.push(...repeatSegment);
+      }
+
+      // Đoạn 1,3 ở cuối cùng
+      reversed.push(...segmentBefore);
+
+      // Hiển thị dãy số đảo ngược
+      document.getElementById("reversedSequence").value = reversed.join(", ");
+    }
+
+    // Hàm sao chép dãy số
+    function copySequence() {
+      // Lấy dãy số từ phần tử input
+      let sequenceText = document.getElementById("sequence").value;
+
+      // Tạo một trường input tạm thời để sao chép
+      let tempInput = document.createElement("input");
+      tempInput.value = sequenceText;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand("copy");
+      document.body.removeChild(tempInput);
+
+      alert("Dãy số đã được sao chép!");
+    }
+  </script>
+
+</body>
+</html>
