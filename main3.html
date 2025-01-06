@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="style.css">     
 </head>
 <body>
-
     <div class="container">
         <div class="menu">
             <ul>
@@ -18,24 +17,27 @@
             </ul>
         </div>        
 
-        <label for="inputNumber">Nhập vào số:</label>
-        <input type="number" id="inputNumber" min="2" step="1" required>
+        <label for="inputNumber">Road Edge:</label>
+        <input type="number" id="inputNumber" min="2" step="1" placeholder="Nhập vào số lớn hơn hoặc bằng 2: " required>
 
         <div class="sequence-container">
-            <h4>Road Edge:</h4>
-            <input type="text" id="sequence" readonly>
-            <button id="copyButton" onclick="copySequence()"><i class="fa-solid fa-copy"></i></button>
+            <h4>Dãy số:</h4>
+            <input type="text" id="sequence" placeholder="Nhập vào số lớn hơn hoặc bằng 2 nha!!!" readonly>
+            <span id="totalLength">Total: 0</span>
+            <button id="copyButton" onclick="copyToClipboard('sequence')"><i class="fa-solid fa-copy"></i></button>
         </div>
 
         <div class="sequence-container">
-            <h4>Che khuất:</h4>
-            <input type="text" id="reversedSequence" readonly>
-            <button id="copyButton" onclick="copySequence()"><i class="fa-solid fa-copy"></i></button>
+            <h4>Đảo ngược:</h4>
+            <input type="text" id="reversedSequence" placeholder="Nhập vào số lớn hơn hoặc bằng 2 nha!!!" readonly>
+            <span id="reversedLength">Total: 0</span>
+            <button id="copyButton" onclick="copyToClipboard('reversedSequence')"><i class="fa-solid fa-copy"></i></button>
         </div>
     </div>
 
     <script>
         let sequence = [];
+        let reversed = [];
 
         // Sự kiện input để tự động tạo dãy số khi người dùng nhập vào ô input
         document.getElementById("inputNumber").addEventListener("input", generateSequence);
@@ -46,8 +48,7 @@
 
             // Kiểm tra tính hợp lệ của đầu vào
             if (isNaN(num) || num < 2) {
-                document.getElementById("sequence").value = "Vui lòng nhập một số hợp lệ (>=2).";
-                document.getElementById("reversedSequence").value = "";
+                displayMessage("Vui lòng nhập một số hợp lệ (>=2).", true);
                 return;
             }
 
@@ -56,26 +57,26 @@
 
             // Xây dựng dãy số, mỗi phần tử là 0 và số phần tử là num
             for (let i = 0; i < num; i++) {
-                sequence.push(0); // Thêm 0 cho mỗi phần tử
+                sequence.push(0);
             }
 
-            document.getElementById("sequence").value = sequence.join(", "); // Hiển thị trong input
+            document.getElementById("sequence").value = sequence.join(","); // Hiển thị trong input
+            document.getElementById("totalLength").innerText = `Total: ${sequence.length}`;
             
-            // Tự động tạo dãy che khuất sau khi tạo
+            // Tự động tạo dãy đảo ngược sau khi tạo
             generateReversedSequence(num);
         }
 
         function generateReversedSequence(num) {
-            let reversed = [];
+            reversed = [];
 
             // Tạo dãy số 0, 1, 0 bao quanh
-            // Nếu đầu vào là 4 hoặc nhiều hơn, cấu trúc sẽ là 0, 1, 0
             let groups = Math.floor(num / 2);
 
             // Tạo dãy 0, 1, 0, 1, 0... tùy thuộc vào groups
             for (let i = 0; i < groups; i++) {
-                reversed.push(0);  // Thêm số 0 vào
-                reversed.push(1);  // Thêm số 1 vào
+                reversed.push(0);
+                reversed.push(1);
             }
 
             // Nếu số lượng là số lẻ, thêm một số 0 vào cuối
@@ -83,22 +84,34 @@
                 reversed.push(0);
             }
 
-            document.getElementById("reversedSequence").value = reversed.join(", "); // Hiển thị dãy che khuất
+            document.getElementById("reversedSequence").value = reversed.join(",");
+            document.getElementById("reversedLength").innerText = `Total: ${reversed.length}`;
         }
 
-        // Hàm sao chép dãy số
-        function copySequence() {
-            let sequenceText = document.getElementById("sequence").value;
+        function displayMessage(message, clear) {
+            document.getElementById("sequence").value = clear ? "" : message;
+            document.getElementById("reversedSequence").value = clear ? "" : "";
+            document.getElementById("totalLength").innerText = "Total: 0";
+            document.getElementById("reversedLength").innerText = "Total: 0";
+        }
 
-            // Tạo một trường input tạm thời để sao chép
-            let tempInput = document.createElement("input");
-            tempInput.value = sequenceText;
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand("copy");
-            document.body.removeChild(tempInput);
+        function copyToClipboard(id) {
+            let text = document.getElementById(id).value;
+            navigator.clipboard.writeText(text).then(() => {
+                showNotification(`Dãy số \"${id}\" đã được sao chép!`);
+            });
+        }
 
-            alert("Dãy số đã được sao chép!");
+        function showNotification(message) {
+            let notification = document.createElement("div");
+            notification.innerText = message;
+            Object.assign(notification.style, {
+                position: "fixed", bottom: "20px", right: "20px", backgroundColor: "#4caf50",
+                color: "#fff", padding: "10px 20px", borderRadius: "5px",
+                boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.2)", fontSize: "16px", zIndex: "1000"
+            });
+            document.body.appendChild(notification);
+            setTimeout(() => document.body.removeChild(notification), 3000);
         }
     </script>
 

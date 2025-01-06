@@ -24,50 +24,52 @@ body {
     text-align: center;
 }
 
-/* Định dạng cho danh sách */
 .menu ul {
-    list-style-type: none; /* Loại bỏ dấu chấm đầu dòng */
-    padding: 0; /* Xóa khoảng cách padding mặc định của ul */
-    margin: 0; /* Xóa khoảng cách margin mặc định của ul */
-    display: flex; /* Hiển thị các mục trong danh sách theo hàng ngang */
+    list-style-type: none; 
+    padding: 0; 
+    margin: 0; 
+    display: flex; 
 }
 
-/* Định dạng cho các mục menu */
 .menu ul li {
-    margin: 0 15px; /* Khoảng cách giữa các mục menu */
+    margin: 0 15px; 
 }
 
-/* Định dạng cho các liên kết */
 .menu ul li a {
-    text-decoration: none; /* Loại bỏ gạch chân của liên kết */
-    color: #333; /* Màu chữ của liên kết */
-    font-size: 20px; /* Kích thước chữ */
-    padding: 8px 16px; /* Khoảng cách xung quanh chữ */
-    display: block; /* Để liên kết có thể nhận được kích thước */
-    border-radius: 5px; /* Bo tròn các góc của liên kết */
+    text-decoration: none; 
+    color: #333; 
+    font-size: 20px; 
+    padding: 8px 16px; 
+    display: block; 
+    border-radius: 5px; 
     font-weight: bold;
 }
 
 .menu ul li a:hover {
-    background-color: #1976D2; /* Màu nền khi di chuột qua */
-    color: white; /* Màu chữ khi di chuột qua */
+    background-color: #1976D2; 
+    color: white; 
 }
 
-/* Định dạng ô chứa các thành phần */
 .container {
     background-color: #fff;
     border-radius: 10px;
     padding: 30px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    width: 400px;
+    width: 500px;
     text-align: center;
 }
 
 .container h3 {
     margin: 15px 0;
     color: #333;
-    display: inline-block;  /* Cho phép h3 và dãy số nằm cùng hàng */
-    margin-right: 10px; /* Cách dãy số một chút */
+    display: inline-block;  
+    margin-right: 10px; 
+}
+
+.container label {
+    font-weight: bold;
+    font-size: 20px;
+    color: yellowgreen;
 }
 
 /* Định dạng cho các input và buttons */
@@ -93,6 +95,20 @@ button {
 
 button:hover {
     background-color: #45a049;
+}
+
+span {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-left: 5px;
+    padding: 2px 10px;
+    border-radius: 5px;
+}
+
+span:hover {
+    background-color: #1976D2;
 }
 
 /* Định dạng cho nút sao chép */
