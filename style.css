@@ -132,3 +132,9 @@ span:hover {
     align-items: center;
     margin-top: 5px;
 }
+.copyright {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #555;
+}
