@@ -9,55 +9,103 @@
     <link rel="icon" type="icon" href="img/logo.png">   
 </head>
 <body>
-
     <div class="container">
         <div class="menu">
             <ul>
-                <li><a href="index.html">Đếm số</a></li>
-                <li><a href="main2.html">Điểm che khuất</a></li>
-                <li><a href="main3.html">Road Edge</a></li>
+                <li><a href="#" onclick="changeMode('count')">Đếm số</a></li>
+                <li><a href="#" onclick="changeMode('hidden')">Điểm che khuất</a></li>
+                <li><a href="#" onclick="changeMode('road')">Road Edge</a></li>
             </ul>
-        </div>        
-
-        <label for="inputNumber">Đếm số:</label>
-        <input type="number" id="inputNumber" min="4" step="2" placeholder="Nhập vào số lớn hơn hoặc bằng 4: " required>
-
+        </div> 
+        
+        <label id="inputLabel" for="inputNumber">Đếm số:</label>
+        <input type="number" id="inputNumber" placeholder="Nhập giá trị..." required>
+        
         <div class="sequence-container">
             <h4>Dãy số:</h4>
-            <input type="text" id="sequence" placeholder="Nhập vào số chẵn lớn hơn hoặc bằng 4 nha!!!" readonly>
+            <input type="text" id="sequence" readonly>
             <span id="totalLength">Total: 0</span>
             <button id="copyButton" onclick="copyToClipboard('sequence')"><i class="fa-solid fa-copy"></i></button>
         </div>
 
         <div class="sequence-container">
             <h4>Đảo ngược:</h4>
-            <input type="text" id="reversedSequence" placeholder="Nhập vào số chẵn lớn hơn hoặc bằng 4 nha!!!" readonly>
+            <input type="text" id="reversedSequence" readonly>
             <span id="reversedLength">Total: 0</span>
             <button id="copyButton" onclick="copyToClipboard('reversedSequence')"><i class="fa-solid fa-copy"></i></button>
         </div>
     </div>
 
     <script>
-        let sequence = [];
-        let reversed = [];
-
-        // Sự kiện input
+        let mode = 'count';
         document.getElementById("inputNumber").addEventListener("input", generateSequence);
+
+        function changeMode(newMode) {
+            mode = newMode;
+            let label = document.getElementById("inputLabel");
+            let input = document.getElementById("inputNumber");
+            
+            if (mode === 'count') {
+                label.innerText = "Đếm số:";
+                input.placeholder = "Nhập vào số lớn hơn hoặc bằng 4";
+                input.min = 4;
+                input.step = 2;
+            } else if (mode === 'hidden') {
+                label.innerText = "Điểm che khuất:";
+                input.placeholder = "Nhập số nguyên chia hết cho 4 và >= 8";
+                input.min = 8;
+                input.step = 4;
+            } else if (mode === 'road') {
+                label.innerText = "Road Edge:";
+                input.placeholder = "Nhập vào số lớn hơn hoặc bằng 2";
+                input.min = 2;
+                input.step = 1;
+            }
+            generateSequence();
+        }
 
         function generateSequence() {
             let num = parseInt(document.getElementById("inputNumber").value);
-            if (isNaN(num) || num <= 0 || num % 2 !== 0) {
-                displayMessage("Vui lòng nhập một số chẵn.", true);
+            let sequence = [];
+            let reversed = [];
+
+            if (isNaN(num)) {
+                displayMessage("Vui lòng nhập số hợp lệ.", true);
                 return;
             }
 
-            sequence = Array(Math.floor((num - 1) / 2)).fill(1).concat(3, Array(Math.floor((num - 1) / 2)).fill(2), 3);
-            reversed = sequence.map((val) => (val === 1 ? 2 : val === 2 ? 1 : val));
+            if (mode === 'count' && (num < 4 || num % 2 !== 0)) {
+                displayMessage("Vui lòng nhập số chẵn >= 4", true);
+                return;
+            } else if (mode === 'hidden' && (num < 8 || num % 4 !== 0)) {
+                displayMessage("Vui lòng nhập số chia hết cho 4 và >= 8", true);
+                return;
+            } else if (mode === 'road' && num < 2) {
+                displayMessage("Vui lòng nhập số >= 2", true);
+                return;
+            }
 
-            updateDisplay();
+            if (mode === 'count') {
+                sequence = Array(Math.floor((num - 1) / 2)).fill(1).concat(3, Array(Math.floor((num - 1) / 2)).fill(2), 3);
+                reversed = sequence.map(val => (val === 1 ? 2 : val === 2 ? 1 : val));
+            } else if (mode === 'hidden') {
+                let repeatSegment = [1, 4], segmentBefore = [1, 3], segmentAfter = [2, 5], endSegment = [2, 3];
+                let repeatCount = (num - 8) / 4;
+                sequence = [...Array(repeatCount + 1).fill(repeatSegment).flat(), ...segmentBefore, ...Array(repeatCount + 1).fill(segmentAfter).flat(), ...endSegment];
+                reversed = [...Array(repeatCount + 1).fill(segmentAfter).flat(), ...endSegment, ...Array(repeatCount + 1).fill(repeatSegment).flat(), ...segmentBefore];
+            } else if (mode === 'road') {
+                sequence = Array(num - 1).fill(0);
+                let groups = Math.floor((num - 1) / 2);
+                for (let i = 0; i < groups; i++) {
+                    reversed.push(0, 1);
+                }
+                if ((num - 1) % 2 !== 0) reversed.push(0);
+            }
+
+            updateDisplay(sequence, reversed);
         }
 
-        function updateDisplay() {
+        function updateDisplay(sequence, reversed) {
             document.getElementById("sequence").value = sequence.join(",");
             document.getElementById("reversedSequence").value = reversed.join(",");
             document.getElementById("totalLength").innerText = `Total: ${sequence.length}`;
@@ -90,6 +138,5 @@
             setTimeout(() => document.body.removeChild(notification), 3000);
         }
     </script>
-
 </body>
 </html>
